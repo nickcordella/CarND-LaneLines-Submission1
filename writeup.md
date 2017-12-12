@@ -16,22 +16,28 @@ The goals / steps of this project are the following:
 
 My pipeline consisted of 5 steps.
 * Convert the image to grayscale using the `grayscale` helper function
+
 ![gray](./test_images_output/solidWhiteCurve_gray.jpg)
 
 * Apply Gaussian smoothing on the image using `gaussian_blur`
+
 ![blurred gray](./test_images_output/solidWhiteCurve_blur_gray.jpg)
 
 * Detect edges in the image using `canny`
+
 ![all edges](./test_images_output/solidWhiteCurve_edges.jpg)
 
 * Mask edges outside the likely lane line polygon footprint by using `region_of_interest`
+
 ![masked](./test_images_output/solidWhiteCurve_masked_edges.jpg)
 
 * Detect lines from the edge-located pixels using `hough_lines`
   * The `draw_lines` function was modified to draw only two straight lines representative of the full extent of the lane lines (see below)
+
 ![raw lines](./test_images_output/solidWhiteCurve_raw_lines.jpg)
 
 * Overlay lines onto original image using `weighted_img`
+
 ![mixed](./test_images_output/solidWhiteCurve_lines.jpg)
 
 In order to draw a single line on the left and right lanes, I had to modify the draw_lines() function. Now it iterates over all detected lines from the `cv2.HoughLinesP` function and does the following:
