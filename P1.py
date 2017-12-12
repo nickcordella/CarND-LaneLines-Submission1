@@ -231,7 +231,7 @@ print(image_names)
 # 
 # Try tuning the various parameters, especially the low and high Canny thresholds as well as the Hough lines parameters.
 
-# In[5]:
+# In[15]:
 
 
 # TODO: Build your pipeline that will draw lane lines on the test_images
@@ -241,26 +241,33 @@ out_dir = "test_images_output"
 if not os.path.exists(out_dir):
     os.mkdir(out_dir)
 
-for image_name in image_names:
+for image_name in image_names[1:2]:
     if not image_name.startswith('.'):
         image = mpimg.imread('test_images/' + image_name)
         # Grayscale the image
-        # image = mpimg.imread("test_images/solidWhiteRight.jpg") - this is already done above
         gray = grayscale(image)
+        plt.imshow(gray, cmap='gray')
+        plt.savefig(out_dir + '/' + image_name[:-4] + '_gray.jpg');
 
         # Define a kernel size and apply Gaussian smoothing
         kernel_size = 3
         blur_gray = gaussian_blur(gray, kernel_size)
+        plt.imshow(blur_gray, cmap='gray')
+        plt.savefig(out_dir + '/' + image_name[:-4] + '_blur_gray.jpg');
 
         # Define parameters for Canny and apply
         low_threshold = 50
         high_threshold = 150
         edges = canny(blur_gray, low_threshold, high_threshold)
-
+        plt.imshow(edges)
+        plt.savefig(out_dir + '/' + image_name[:-4] + '_edges.jpg');
+        
         # Define a four-sided polygon to mask
         imshape = edges.shape
         vertices = np.array([[(imshape[1]*0.1,imshape[0]),(imshape[1]*0.48, imshape[0]*0.58), (imshape[1]*0.52, imshape[0]*0.58), (imshape[1]*0.9,imshape[0])]], dtype=np.int32)
         masked_edges = region_of_interest(edges, vertices)
+        plt.imshow(masked_edges)
+        plt.savefig(out_dir + '/' + image_name[:-4] + '_masked_edges.jpg');
 
         # Define Hough transform parameters and detect lines
         rho = 2 # distance resolution in pixels of the Hough grid
@@ -269,9 +276,12 @@ for image_name in image_names:
         min_line_length = 40 #minimum number of pixels making up a line
         max_line_gap = 20    # maximum gap in pixels between connectable line segments
         line_image = hough_lines(masked_edges, rho, theta, threshold, min_line_length, max_line_gap)
+        plt.imshow(line_image)
+        plt.savefig(out_dir + '/' + image_name[:-4] + '_raw_lines.jpg');
 
         # Draw the lines on the edge image
         lines_and_camera = weighted_img(line_image, image)
+        plt.imshow(lines_and_camera)
         plt.savefig(out_dir + '/' + image_name[:-4] + '_lines.jpg');
 
 
